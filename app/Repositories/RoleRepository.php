@@ -7,6 +7,7 @@ use App\Models\Role;
 use Illuminate\Http\JsonResponse;
 
 class RoleRepository implements RoleInterface {
+
     public function getAllRoles(): JsonResponse
     {
         $roles = Role::with('users')->select('*')->get();
@@ -71,33 +72,21 @@ class RoleRepository implements RoleInterface {
 
     public function updateRecentRole(RoleRequest $request, string $id): JsonResponse
     {   
-        $recentRoleData = Role::with('users')
-        ->select('*')
-        ->where('id', $id)
-        ->first();
+        $recentRoleData = Role::findOrFail($id);
 
-        if (!$recentRoleData) {
-            return response()->json([
-                'success' => false,
-                'statusCode' => 404,
-                'message' => 'Role model data not found, make sure to re-check the data again',
-                'content' => null
-            ], 404);
-        } else {
-            $validatedData = $request->validated();
+        $validatedData = $request->validated();
 
-            $recentRoleData->update([
-                'title' => $validatedData['title'],
-                'abilities' => $validatedData['abilities'],
-            ]);
+        $recentRoleData->update([
+            'title' => $validatedData['title'],
+            'abilities' => $validatedData['abilities'],
+        ]);
 
-            return response()->json([
-                'success' => true,
-                'statusCode' => 200,
-                'message' => 'Role model data has been successfully retrieve!',
-                'content' => $recentRoleData
-            ], 200);
-        }
+        return response()->json([
+            'success' => true,
+            'statusCode' => 200,
+            'message' => 'Role model data has been successfully updated!',
+            'content' => $recentRoleData
+        ], 200);
     }
 
     public function removeOneRoleById(string $id): JsonResponse

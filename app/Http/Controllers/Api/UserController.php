@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\RegisterUserRequest;
 use App\Http\Requests\Api\UserRequest;
+use App\Http\Requests\Auth\LoginRequest;
 use App\Interfaces\UserInterface;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
@@ -36,6 +38,21 @@ class UserController extends Controller
     public function showByUsername(string $username): JsonResponse
     {
         return $this->userInterface->getOneUserByUsername($username);
+    }
+
+    public function register(RegisterUserRequest $request): JsonResponse
+    {
+        return $this->userInterface->registerNewAccount($request);
+    }
+
+    public function login(LoginRequest $request): JsonResponse
+    {
+        return $this->userInterface->loginAccount($request);
+    }
+
+    public function logout(Request $request): JsonResponse
+    {
+        return $this->userInterface->logoutAccount($request);
     }
 
     /**

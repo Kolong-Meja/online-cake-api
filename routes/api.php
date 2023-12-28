@@ -20,15 +20,15 @@ use Illuminate\Support\Facades\Route;
 
 // for authentication purpose
 Route::prefix('v1/auth')->group(function () {
-    Route::post('/register', [UserController::class, 'store'])
+    Route::post('/register', [UserController::class, 'register'])
     ->middleware('guest')
     ->name('auth.register');
-                
-    Route::post('/login', [AuthenticatedSessionController::class, 'store'])
+    
+    Route::post('/login', [UserController::class, 'login'])
     ->middleware('guest')
     ->name('auth.login');
 
-    Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
+    Route::post('/logout', [UserController::class, 'logout'])
     ->middleware('auth:api')
     ->name('auth.logout');
 });
@@ -38,15 +38,15 @@ Route::prefix('v1')->middleware('guest')->group(function () {
     Route::get('/roles', [RoleController::class, 'index'])->name('role.index');
     Route::get('/roles/{id}', [RoleController::class, 'show'])->name('role.show');
     Route::post('/roles', [RoleController::class, 'store'])->name('role.store');
-    Route::put('/roles/{id}', [RoleController::class, 'update'])->name('role.update');
+    Route::post('/roles/{id}', [RoleController::class, 'update'])->name('role.update');
     Route::delete('/roles/{id}', [RoleController::class, 'destroy'])->name('role.delete');
 });
 
 // for admin purpose
-Route::prefix('v1/admin')->middleware(['auth:api', 'role:admin'])->group(function () {
+Route::prefix('v1/admin')->middleware(['auth:api'])->group(function () {
     Route::get('/users', [UserController::class, 'index'])->name('user.index');
     Route::get('/users/{id}', [UserController::class, 'show'])->name('user.show');
     Route::get('/users/username/{username}', [UserController::class, 'showByUsername'])->name('user.username');
-    Route::put('/users/{id}', [UserController::class, 'update'])->name('user.update');
+    Route::post('/users/{id}', [UserController::class, 'update'])->name('user.update');
     Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('user.delete');
 });

@@ -29,7 +29,6 @@ class UserRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'password_confirmation' => ['required', 'same:password'],
         ];
     }
 
@@ -42,8 +41,8 @@ class UserRequest extends FormRequest
             'username.required' => 'Username is required, cannot be empty!',
             'name.required' => 'Name is required, cannot be empty!',
             'email.required' => 'Email is required, cannot be empty!',
-            'password' => 'Password is required, cannot be empty!',
-            'password_confimation' => 'Password confirmation is required, cannot be empty!',
+            'password.required' => 'Password is required, cannot be empty!',
+            'password_confimation.required' => 'Password confirmation is required, cannot be empty!',
         ];
     }
 }

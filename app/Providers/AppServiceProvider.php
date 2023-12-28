@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Enums\UserStatusActivity;
 use App\Interfaces\RoleInterface;
 use App\Interfaces\UserInterface;
 use App\Repositories\RoleRepository;

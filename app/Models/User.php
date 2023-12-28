@@ -3,9 +3,11 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Enums\UserStatusActivity;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -27,6 +29,8 @@ class User extends Authenticatable implements JWTSubject
         'username',
         'name',
         'email',
+        'phone_number',
+        'address',
         'password',
         'last_login_at',
         'status',
@@ -52,6 +56,7 @@ class User extends Authenticatable implements JWTSubject
         'email_verified_at' => 'datetime',
         'last_login_at' => 'datetime',
         'password' => 'hashed',
+        'status' => UserStatusActivity::class,
     ];
 
     /**
@@ -79,5 +84,17 @@ class User extends Authenticatable implements JWTSubject
     public function role(): BelongsTo
     {
         return $this->belongsTo(Role::class, 'role_id');
+    }
+
+    // relation with order model
+    public function orders(): HasMany
+    {
+        return $this->HasMany(Order::class, 'user_id');
+    }
+
+    // relation with shopping session model
+    public function sessions(): HasMany
+    {
+        return $this->hasMany(ShoppingSession::class, 'user_id');
     }
 }
