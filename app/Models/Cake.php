@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Cake extends Model
 {
@@ -22,17 +22,9 @@ class Cake extends Model
         'status',
     ];
 
-    protected $hidden = ['id'];
-
-    // relation with order model
-    public function orders(): BelongsToMany
+    // relation with cart model
+    public function carts(): HasMany
     {
-        return $this->belongsToMany(Order::class, 'cake_orders', 'cake_id', 'order_id')->withTimestamps();
-    }
-
-    // relation with shopping session model
-    public function sessions(): BelongsToMany
-    {
-        return $this->belongsToMany(ShoppingSession::class, 'cart_cakes', 'cake_id', 'session_id')->withTimestamps();
+        return $this->hasMany(Cart::class, 'cake_id');
     }
 }

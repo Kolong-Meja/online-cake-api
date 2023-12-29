@@ -15,8 +15,6 @@ class Role extends Model
 
     protected $fillable = ['title', 'abilities'];
 
-    protected $hidden = ['id'];
-
     // relation with user model
     public function users(): HasMany
     {

@@ -10,7 +10,7 @@ class RoleRepository implements RoleInterface {
 
     public function getAllRoles(): JsonResponse
     {
-        $roles = Role::with('users')->select('*')->get();
+        $roles = Role::with('users')->get();
 
         if (!$roles->isEmpty()) {
             return response()->json([
@@ -32,7 +32,6 @@ class RoleRepository implements RoleInterface {
     public function getOneRoleById(string $id): JsonResponse
     {
         $recentRoleData = Role::with('users')
-        ->select('*')
         ->where('id', $id)
         ->first();
 
@@ -91,23 +90,13 @@ class RoleRepository implements RoleInterface {
 
     public function removeOneRoleById(string $id): JsonResponse
     {
-        $recentRoleData = Role::find($id);
+        $recentRoleData = Role::findOrFail($id);
 
-        if (!$recentRoleData) {
-            return response()->json([
-                'success' => false,
-                'statusCode' => 404,
-                'message' => 'Role model data not found, make sure to re-check the data again',
-                'content' => null
-            ], 404);
-        } else {
-            $recentRoleData->delete();
-
-            return response()->json([
-                'success' => true,
-                'statusCode' => 200,
-                'message' => 'Role data has been successfully removed!',
-            ], 200);
-        }
+        $recentRoleData->delete();
+        return response()->json([
+            'success' => true,
+            'statusCode' => 200,
+            'message' => 'Role data has been successfully removed!',
+        ], 200);
     }
 }

@@ -11,16 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('cake_orders', function (Blueprint $table) {
+        Schema::create('carts', function (Blueprint $table) {
             $table->uuid('id')->primary();
+            $table->foreignUuid('user_id')
+            ->references('id')
+            ->on('users')
+            ->cascadeOnDelete();
             $table->foreignUuid('cake_id')
             ->references('id')
             ->on('cakes')
             ->cascadeOnDelete();
-            $table->foreignUuid('order_id')
-            ->references('id')
-            ->on('orders')
-            ->cascadeOnDelete();
+            $table->integer('quantity')->nullable(false);
             $table->timestamps();
         });
     }
@@ -30,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('cake_orders');
+        Schema::dropIfExists('carts');
     }
 };

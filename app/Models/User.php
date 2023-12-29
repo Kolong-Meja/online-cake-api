@@ -42,7 +42,6 @@ class User extends Authenticatable implements JWTSubject
      * @var array<int, string>
      */
     protected $hidden = [
-        'id',
         'password',
         'remember_token',
     ];
@@ -86,15 +85,9 @@ class User extends Authenticatable implements JWTSubject
         return $this->belongsTo(Role::class, 'role_id');
     }
 
-    // relation with order model
-    public function orders(): HasMany
+    // relation with cart model
+    public function carts(): HasMany
     {
-        return $this->HasMany(Order::class, 'user_id');
-    }
-
-    // relation with shopping session model
-    public function sessions(): HasMany
-    {
-        return $this->hasMany(ShoppingSession::class, 'user_id');
+        return $this->hasMany(Cart::class, 'user_id');
     }
 }

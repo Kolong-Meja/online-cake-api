@@ -37,7 +37,7 @@ class UserRepository implements UserInterface {
             ], 403);
         }
 
-        $users = User::with('role')->select('*')->get();
+        $users = User::with(['role', 'carts'])->get();
 
         if (!$users->isEmpty()) {
             return response()->json([
@@ -67,8 +67,7 @@ class UserRepository implements UserInterface {
             ], 403);
         }
 
-        $recentUserData = User::with('role')
-        ->select('*')
+        $recentUserData = User::with(['role', 'carts'])
         ->where('id', $id)
         ->first();
 
@@ -100,8 +99,7 @@ class UserRepository implements UserInterface {
             ], 403);
         }
         
-        $recentUserData = User::with('role')
-        ->select('*')
+        $recentUserData = User::with(['role', 'carts'])
         ->where('username', $username)
         ->first();
 
@@ -213,33 +211,24 @@ class UserRepository implements UserInterface {
             ], 403);
         }
 
-        $recentUserData = User::find($id);
+        $recentUserData = User::findOrFail($id);
 
-        if (!$recentUserData) {
-            return response()->json([
-                'success' => false,
-                'statusCode' => 404,
-                'message' => 'User model data not found, make sure to re-check the data again',
-                'content' => null
-            ], 404);
-        } else {
-            $validatedData = $userRequest->validated();
+        $validatedData = $userRequest->validated();
 
-            $recentUserData->update([
-                'role_id' => $validatedData['role_id'],
-                'username' => $validatedData['username'],
-                'name' => $validatedData['name'],
-                'email' => $validatedData['email'],
-                'password' => $validatedData['password'],
-            ]);
+        $recentUserData->update([
+            'role_id' => $validatedData['role_id'],
+            'username' => $validatedData['username'],
+            'name' => $validatedData['name'],
+            'email' => $validatedData['email'],
+            'password' => $validatedData['password'],
+        ]);
 
-            return response()->json([
-                'success' => true,
-                'statusCode' => 200,
-                'message' => 'User model data has been successfully updated!',
-                'content' => $recentUserData
-            ], 200);
-        }
+        return response()->json([
+            'success' => true,
+            'statusCode' => 200,
+            'message' => 'User model data has been successfully updated!',
+            'content' => $recentUserData
+        ], 200);
     }
 
     public function removeOneUserById(string $id): JsonResponse
@@ -253,23 +242,13 @@ class UserRepository implements UserInterface {
             ], 403);
         }
         
-        $recentUserData = User::find($id);
+        $recentUserData = User::findOrFail($id);
 
-        if (!$recentUserData) {
-            return response()->json([
-                'success' => false,
-                'statusCode' => 404,
-                'message' => 'User model data not found, make sure to re-check the data again',
-                'content' => null
-            ], 404);
-        } else {
-            $recentUserData->delete();
-
-            return response()->json([
-                'success' => true,
-                'statusCode' => 200,
-                'message' => 'User data has been successfully removed!',
-            ], 200);
-        }
+        $recentUserData->delete();
+        return response()->json([
+            'success' => true,
+            'statusCode' => 200,
+            'message' => 'User data has been successfully removed!',
+        ], 200);
     }
 }
