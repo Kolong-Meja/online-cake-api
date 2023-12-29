@@ -3,6 +3,7 @@
 namespace App\Repositories;
 use App\Http\Requests\Api\CartRequest;
 use App\Interfaces\CartInterface;
+use App\Models\Cake;
 use App\Models\Cart;
 use App\Utils\CheckRole;
 use Illuminate\Http\JsonResponse;

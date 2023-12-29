@@ -17,22 +17,15 @@ use Illuminate\Support\Facades\Hash;
 use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 
 class UserRepository implements UserInterface {
-    private const REQUIRED_ROLE = "admin";
-
-    protected UserStatusActivity $userStatusActivity;
-
-    public function __construct(UserStatusActivity $userStatusActivity)
-    {
-        $this->userStatusActivity = $userStatusActivity;
-    }
+    private const REQUIRED_ROLE = ["customer", "admin"];
 
     public function getAllUsers(): JsonResponse
     {
-        if (CheckRole::authUserRole() !== self::REQUIRED_ROLE) {
+        if (!in_array(CheckRole::authUserRole(), self::REQUIRED_ROLE)) {
             return response()->json([
                 'success' => false,
                 'statusCode' => 403,
-                'message' => "Access denied! you don't have the required role ". self::REQUIRED_ROLE,
+                'message' => "Access denied! you don't have the required role, customer and admin",
                 'content' => null
             ], 403);
         }
@@ -58,11 +51,11 @@ class UserRepository implements UserInterface {
 
     public function getOneUserById(string $id): JsonResponse
     {
-        if (CheckRole::authUserRole() !== self::REQUIRED_ROLE) {
+        if (!in_array(CheckRole::authUserRole(), self::REQUIRED_ROLE)) {
             return response()->json([
                 'success' => false,
                 'statusCode' => 403,
-                'message' => "Access denied! you don't have the required role ". self::REQUIRED_ROLE,
+                'message' => "Access denied! you don't have the required role, customer and admin",
                 'content' => null
             ], 403);
         }
@@ -90,11 +83,11 @@ class UserRepository implements UserInterface {
 
     public function getOneUserByUsername(string $username): JsonResponse
     {
-        if (CheckRole::authUserRole() !== self::REQUIRED_ROLE) {
+        if (!in_array(CheckRole::authUserRole(), self::REQUIRED_ROLE)) {
             return response()->json([
                 'success' => false,
                 'statusCode' => 403,
-                'message' => "Access denied! you don't have the required role ". self::REQUIRED_ROLE,
+                'message' => "Access denied! you don't have the required role, customer and admin",
                 'content' => null
             ], 403);
         }
@@ -129,6 +122,8 @@ class UserRepository implements UserInterface {
             'username' => $validatedData['username'],
             'name' => $validatedData['name'],
             'email' => $validatedData['email'],
+            'phone_number' => $validatedData['phone_number'],
+            'address' => $validatedData['address'],
             'password' => Hash::make($validatedData['password']),
         ]);
 
@@ -136,7 +131,7 @@ class UserRepository implements UserInterface {
 
         $newUser->update([
             'last_login_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'status' => 'online',
+            'status' => UserStatusActivity::ONLINE,
         ]);
 
         return response()->json([
@@ -165,7 +160,7 @@ class UserRepository implements UserInterface {
 
         $request->user()->update([
             'last_login_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'status' => $this->userStatusActivity::ONLINE,
+            'status' => UserStatusActivity::ONLINE,
         ]);
 
         $authUserName = Auth::user()->name;
@@ -185,7 +180,7 @@ class UserRepository implements UserInterface {
     public function logoutAccount(Request $request): JsonResponse
     {
         $request->user()->update([
-            'status' => 'offline',
+            'status' => UserStatusActivity::OFFLINE,
         ]);
         
         $jwtToken = JWTAuth::getToken();
@@ -202,11 +197,11 @@ class UserRepository implements UserInterface {
 
     public function updateRecentUser(UserRequest $userRequest, string $id): JsonResponse
     {
-        if (CheckRole::authUserRole() !== self::REQUIRED_ROLE) {
+        if (CheckRole::authUserRole() !== self::REQUIRED_ROLE[1]) {
             return response()->json([
                 'success' => false,
                 'statusCode' => 403,
-                'message' => "Access denied! you don't have the required role ". self::REQUIRED_ROLE,
+                'message' => "Access denied! you don't have the required role ". self::REQUIRED_ROLE[1],
                 'content' => null
             ], 403);
         }
@@ -220,6 +215,8 @@ class UserRepository implements UserInterface {
             'username' => $validatedData['username'],
             'name' => $validatedData['name'],
             'email' => $validatedData['email'],
+            'phone_number' => $validatedData['phone_number'],
+            'address' => $validatedData['address'],
             'password' => $validatedData['password'],
         ]);
 
@@ -233,11 +230,11 @@ class UserRepository implements UserInterface {
 
     public function removeOneUserById(string $id): JsonResponse
     {
-        if (CheckRole::authUserRole() !== self::REQUIRED_ROLE) {
+        if (CheckRole::authUserRole() !== self::REQUIRED_ROLE[1]) {
             return response()->json([
                 'success' => false,
                 'statusCode' => 403,
-                'message' => "Access denied! you don't have the required role ". self::REQUIRED_ROLE,
+                'message' => "Access denied! you don't have the required role ". self::REQUIRED_ROLE[1],
                 'content' => null
             ], 403);
         }
@@ -249,6 +246,7 @@ class UserRepository implements UserInterface {
             'success' => true,
             'statusCode' => 200,
             'message' => 'User data has been successfully removed!',
+            'content' => null,
         ], 200);
     }
 }

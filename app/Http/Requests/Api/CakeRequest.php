@@ -4,6 +4,7 @@ namespace App\Http\Requests\Api;
 
 use App\Enums\CakeStatus;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Enum;
 
 class CakeRequest extends FormRequest
 {
@@ -28,7 +29,7 @@ class CakeRequest extends FormRequest
             'weight' => ['required', 'decimal:2'],
             'price' => ['required', 'decimal:2'],
             'stock' => ['required', 'numeric'],
-            'status' => ['required', CakeStatus::class],
+            'status' => ['required', new Enum(CakeStatus::class)],
         ];
     }
 

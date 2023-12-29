@@ -22,8 +22,9 @@ return new class extends Migration
             $table->string('email')
             ->unique()
             ->nullable(false);
-            $table->string('phone_number')
+            $table->string('phone_number', 13)
             ->unique()
+            ->default('6277889988')
             ->nullable(false);
             $table->text('address')->nullable(false);
             $table->timestamp('email_verified_at')->nullable();

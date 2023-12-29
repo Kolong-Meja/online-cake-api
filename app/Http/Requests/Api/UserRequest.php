@@ -28,6 +28,8 @@ class UserRequest extends FormRequest
             'username' => ['required', 'max:255'],
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'phone_number' => ['required', 'string', 'max:13', 'unique:users,phone_number'],
+            'address' => ['required', 'string'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ];
     }
@@ -41,6 +43,8 @@ class UserRequest extends FormRequest
             'username.required' => 'Username is required, cannot be empty!',
             'name.required' => 'Name is required, cannot be empty!',
             'email.required' => 'Email is required, cannot be empty!',
+            'phone_number' => 'Phone number is required, cannot be empty!',
+            'address' => 'Address is required, cannot be empty!',
             'password.required' => 'Password is required, cannot be empty!',
             'password_confimation.required' => 'Password confirmation is required, cannot be empty!',
         ];

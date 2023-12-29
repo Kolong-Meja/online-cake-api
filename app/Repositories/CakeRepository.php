@@ -11,13 +11,6 @@ use Illuminate\Http\JsonResponse;
 class CakeRepository implements CakeInterface {
     private const REQUIRED_ROLE = ["customer", "admin"];
 
-    protected CakeStatus $cakeStatus;
-
-    public function __construct(CakeStatus $cakeStatus)
-    {
-        $this->cakeStatus = $cakeStatus;
-    }
-
     public function getAllCakes(): JsonResponse
     {
         if (!in_array(CheckRole::authUserRole(), self::REQUIRED_ROLE)) {

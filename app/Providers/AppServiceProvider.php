@@ -2,7 +2,10 @@
 
 namespace App\Providers;
 
+use App\Enums\CakeStatus;
 use App\Enums\UserStatusActivity;
+use App\Http\Controllers\Api\CakeController;
+use App\Http\Controllers\Api\UserController;
 use App\Interfaces\CakeInterface;
 use App\Interfaces\CartInterface;
 use App\Interfaces\RoleInterface;
